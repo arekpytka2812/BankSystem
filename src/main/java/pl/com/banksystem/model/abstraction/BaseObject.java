@@ -3,26 +3,25 @@ package pl.com.banksystem.model.abstraction;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @RequiredArgsConstructor
 @Getter
 @Setter
+@ToString
 public abstract class BaseObject {
 
     @Column(name = "id")
     private Long ID;
 
     @Column(name = "insert_date")
-    private LocalDateTime insertDate;
+    private Timestamp insertDate;
 
     @Column(name = "update_date")
-    private LocalDateTime updateDate;
+    private Timestamp updateDate;
 
     @Column(name = "insert_user")
     private Long insertUser;
@@ -32,27 +31,6 @@ public abstract class BaseObject {
 
     @Column(name = "business_id")
     private Long businessID;
-
-    protected void setFieldsFromDB(ResultSet resultSet) throws SQLException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
-
-        Field[] fields = this.getClass().getDeclaredFields();
-
-        for(Field field : fields){
-
-            if(!field.isAnnotationPresent(Column.class)){
-                continue;
-            }
-
-            field.setAccessible(true);
-
-            String columnName = field.getAnnotation(Column.class).name();
-            Class<?> fieldClass = field.getType();
-
-            Object value = fieldClass.getConstructor(fieldClass).newInstance(resultSet.getObject(columnName));
-
-            field.set(this, value);
-        }
-    }
 
     public void save() throws IllegalAccessException {
 
