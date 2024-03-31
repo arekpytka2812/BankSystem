@@ -27,6 +27,8 @@ begin
 
     loop
 
+        perform tr_process_transaction(v_row.id_transaction);
+
         v_successful_processes := v_successful_processes + 1;
 
     end loop;
