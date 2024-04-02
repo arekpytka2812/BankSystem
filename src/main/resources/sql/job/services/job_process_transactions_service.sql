@@ -16,7 +16,7 @@ begin
     from tr_ordered_transaction;
 
     perform job_add_log(
-        'process_transactions_service',
+        'job_process_transactions_service',
         'Starting processing ' || v_transactions_to_process_count || ' transactions',
         false
     );

@@ -4,6 +4,8 @@ create table tr_cyclical_transaction(
     id_account_to bigint not null references acc_account(id),
     money_to_sent numeric(15,4) not null,
     next_transaction_date date not null,
+    transaction_title text,
+    interval_between_transactions interval default '1 month'::interval,
     insert_date timestamp without time zone default localtimestamp(0),
     insert_user bigint,
     update_date timestamp without time zone,

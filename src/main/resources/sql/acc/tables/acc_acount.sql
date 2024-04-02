@@ -7,6 +7,8 @@ create table acc_account(
     account_name text not null,
     account_open_date date not null,
     account_close_date date,
+    balance numeric(15,4) not null default 0.00,
+    currency_id bigint not null references d_acc_currency(id),
     insert_date timestamp without time zone default localtimestamp(0),
     insert_user bigint,
     update_date timestamp without time zone,
