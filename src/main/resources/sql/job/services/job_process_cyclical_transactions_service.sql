@@ -76,7 +76,7 @@ begin
         end loop;
 
         if v_subtraction_successful = false then
-            -- push na blokady bo to zawsze ma dzialac
+            perform acc_add_balance_to_queue(v_row.id_account_from, ('-' || v_row.money_to_sent::text)::numeric(15,4), p_user_id);
         end if;
 
         v_tries_count := 0;
@@ -89,7 +89,7 @@ begin
         end loop;
 
         if v_addition_successful = false then
-            -- push na bloakady bo to zawsze dziala
+            perform acc_add_balance_to_queue(v_row.id_account_to, v_row.money_to_sent, p_user_id);
         end if;
 
         update tr_cyclical_transaction

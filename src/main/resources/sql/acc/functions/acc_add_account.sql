@@ -15,6 +15,8 @@ declare
 
 begin
 
+    -- i guess WIP
+
     if(p_user_id is null) then
         raise exception 'User is null!';
     end if;
