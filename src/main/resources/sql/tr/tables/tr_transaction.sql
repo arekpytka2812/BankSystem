@@ -5,7 +5,8 @@ create table tr_transaction(
     id_account_to bigint not null references acc_account(id),
     id_transaction_type bigint not null references d_tr_transaction_type(id),
     id_transaction_status bigint not null references d_tr_transaction_status(id) default 1,
-    money_sent numeric(15, 4) not null,
+    money_sent numeric(15, 4) not null, --discuss max number
+    currency bigint not null references d_acc_currency(id) default 0,
     transaction_order_date date not null,
     transaction_booking_date date,
     transaction_title text,

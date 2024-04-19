@@ -4,7 +4,8 @@ create or replace function tr_add_transaction(
     p_id_account_to bigint,
     p_id_transaction_type bigint,
     p_money_sent numeric(15,4),
-    p_transaction_order_date date
+    p_transaction_order_date date,
+    p_currency bigint
 )
 returns void
 language 'plpgsql'
@@ -53,7 +54,8 @@ begin
         id_transaction_type,
         money_sent,
         transaction_order_date,
-        insert_user
+        insert_user,
+        currency
     )
     values (
         p_id_user,
@@ -62,7 +64,8 @@ begin
         p_id_transaction_type,
         p_money_sent,
         coalesce(v_transaction_order_date, p_transaction_order_date),
-        p_id_user
+        p_id_user,
+        p_currency
     )
     returning id
     into v_id_transaction;

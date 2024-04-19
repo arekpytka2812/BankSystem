@@ -4,7 +4,8 @@ create or replace function acc_add_account(
     p_id_parent_account bigint,
     p_account_name text,
     p_account_open_date date,
-    p_account_close_date date
+    p_account_close_date date,
+    p_currency_id bigint
 )
 returns void
 language 'plpgsql'
@@ -44,7 +45,8 @@ begin
         account_number,
         account_open_date,
         account_close_date,
-        insert_user
+        insert_user,
+        currency_id
     )
     values (
         p_user_id,
@@ -54,7 +56,8 @@ begin
         acc_generate_account_number(p_id_account_type),
         coalesce(p_account_open_date, current_date),
         p_account_close_date,
-        p_user_id
+        p_user_id,
+        p_currency_id
     );
 
 end;

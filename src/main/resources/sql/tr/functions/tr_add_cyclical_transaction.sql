@@ -5,7 +5,8 @@ create or replace function tr_add_cyclical_transaction(
     p_next_transaction_date date,
     p_transaction_title text,
     p_interval_between_transactions interval,
-    p_id_user bigint
+    p_id_user bigint,
+    p_currency bigint
 )
 returns void
 language 'plpgsql'
@@ -31,7 +32,8 @@ begin
         next_transaction_date,
         transaction_title,
         interval_between_transactions,
-        insert_user
+        insert_user,
+        currency
     )
     values(
         p_id_account_from,
@@ -40,7 +42,8 @@ begin
         sys_get_next_work_day(p_next_transaction_date),
         p_transaction_title,
         coalesce(p_interval_between_transactions, default),
-        p_id_user
+        p_id_user,
+        p_currency
     );
 
 end;
