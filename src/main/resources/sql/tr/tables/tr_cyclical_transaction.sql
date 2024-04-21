@@ -6,6 +6,7 @@ create table tr_cyclical_transaction(
     next_transaction_date date not null,
     transaction_title text,
     interval_between_transactions interval default '1 month'::interval,
+    currency bigint not null references d_acc_currency(id) default 0,
     insert_date timestamp without time zone default localtimestamp(0),
     insert_user bigint,
     update_date timestamp without time zone,
