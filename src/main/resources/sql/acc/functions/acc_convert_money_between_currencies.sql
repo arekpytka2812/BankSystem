@@ -8,6 +8,7 @@ language 'plpgsql'
 as $function$
 declare
 
+    v_to_dollars numeric (15,4) := -1.0000;
     v_converted_money numeric (15,4) := -1.0000;
 
 begin

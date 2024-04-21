@@ -1,4 +1,4 @@
-create table usr_user_credentials(
+create table usr_user_credentials( -- access to this table only by function
     id bigint primary key references usr_user(id),
     login text unique not null,
     password text not null,
