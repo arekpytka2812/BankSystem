@@ -11,6 +11,7 @@ declare
     V_BASE_PATH             text := '../../../../home/sql';
 
     V_MAIN_DIRS_ORDER       text[] := array['sys', 'hist', 'usr', 'acc', 'tr', 'job'];
+    V_SUB_DIRS_ORDER        text[] := array['tables', 'functions', 'inserts'];
     V_USR_TABLES_ORDER      text := '''usr_user.sql''';
     V_ACC_TABLES_ORDER      text := '''acc_account.sql'', ''acc_credit.sql'', ''acc_credit_installment.sql''';
     V_TR_TABLES_ORDER       text := '''tr_transaction.sql''';
@@ -105,7 +106,7 @@ begin
         for v_sub_dir in
             select *
             from pg_ls_dir(V_BASE_PATH || '/' || v_dir)
-            order by array_position(array['tables', 'functions', 'inserts'], pg_ls_dir)
+            order by array_position(V_SUB_DIRS_ORDER, pg_ls_dir)
         loop
 
             if v_sub_dir ~* '.sql' then

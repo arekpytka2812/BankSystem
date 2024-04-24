@@ -7,8 +7,8 @@ services:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     ports:
-      - '5332:5432'
+      - ${PORTS_MAPPING}
     volumes:
-      - ./src/main/resources/sql:/home/sql
-      - ./src/main/resources/scripts:/docker-entrypoint-initdb.d
+      - ${HOST_SQL_RESOURCES_PATH}:${CONTAINER_SQL_RESOURCE_PATH}
+      - ${HOST_DB_REBUILD_SCRIPTS_PATH}:${CONTAINER_DB_REBUILD_SCRIPTS_PATH}
     command: [ "postgres", "-c", "log_statement=all" ]
