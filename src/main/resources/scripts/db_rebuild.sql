@@ -67,6 +67,13 @@ begin
             FROM information_schema.sequences
             WHERE sequence_schema = 'public'
 
+            UNION
+
+            SELECT 'DROP FUNCTION IF EXISTS public.' || proname || ';' as drop_stmt
+            FROM pg_proc
+            WHERE pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
+              and proname != 'db_rebuild'
+
         ) as foo
         order by
             case
@@ -81,16 +88,6 @@ begin
         raise notice '%', v_drop_rec.drop_stmt;
         EXECUTE v_drop_rec.drop_stmt;
     END LOOP;
-
-    for v_drop_rec in
-        SELECT 'DROP FUNCTION IF EXISTS public.' || proname || ';' as drop_stmt
-        FROM pg_proc
-        WHERE pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
-          and proname != 'db_rebuild'
-    LOOP
-        EXECUTE v_drop_rec.drop_stmt;
-    END LOOP;
-
 
     -- business seq musi byc pierwszy
     v_statement := pg_read_file(V_BASE_PATH || '/sys/sys_business_id_sequence.sql');
