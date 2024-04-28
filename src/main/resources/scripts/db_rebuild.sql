@@ -32,6 +32,9 @@ declare
 begin
 
     -- drop
+
+    DROP EXTENSION IF EXISTS pg_cron;
+
     FOR v_drop_rec IN
 
         select drop_stmt
@@ -88,6 +91,8 @@ begin
         raise notice '%', v_drop_rec.drop_stmt;
         EXECUTE v_drop_rec.drop_stmt;
     END LOOP;
+
+    CREATE EXTENSION IF NOT EXISTS pg_cron;
 
     -- business seq musi byc pierwszy
     v_statement := pg_read_file(V_BASE_PATH || '/sys/sys_business_id_sequence.sql');
