@@ -34,6 +34,8 @@ begin
     -- drop
     drop extension if exists pgcrypto;
 
+    DROP EXTENSION IF EXISTS pg_cron;
+
     FOR v_drop_rec IN
 
         select drop_stmt
@@ -94,6 +96,7 @@ begin
 
     -- extensions
     create extension if not exists pgcrypto;
+    CREATE EXTENSION IF NOT EXISTS pg_cron;
 
     -- business seq musi byc pierwszy i hist_trigger_func
     v_statement := pg_read_file(V_BASE_PATH || '/sys/sys_business_id_sequence.sql');
