@@ -1,1 +1,1 @@
-CREATE SEQUENCE sys_business_id_sequence as bigint increment by -1 start -999999999999999999;
+CREATE SEQUENCE sys_business_id_sequence as bigint increment by 1 start -999999999999999999 minvalue -999999999999999999;

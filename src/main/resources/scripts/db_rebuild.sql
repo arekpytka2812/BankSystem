@@ -32,6 +32,7 @@ declare
 begin
 
     -- drop
+    drop extension if exists pgcrypto;
 
     DROP EXTENSION IF EXISTS pg_cron;
 
@@ -72,7 +73,7 @@ begin
 
             UNION
 
-            SELECT 'DROP FUNCTION IF EXISTS public.' || proname || ';' as drop_stmt
+            SELECT 'DROP FUNCTION IF EXISTS public.' || proname || ' CASCADE;' as drop_stmt
             FROM pg_proc
             WHERE pronamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
               and proname != 'db_rebuild'
@@ -84,7 +85,8 @@ begin
                 when drop_stmt ~* 'alter table' then 2
                 when drop_stmt ~* 'index' then 3
                 when drop_stmt ~* 'drop table' then 4
-                else 5
+                when drop_stmt ~* 'function' then 5
+                else 6
             end
 
     LOOP
@@ -92,10 +94,15 @@ begin
         EXECUTE v_drop_rec.drop_stmt;
     END LOOP;
 
+    -- extensions
+    create extension if not exists pgcrypto;
     CREATE EXTENSION IF NOT EXISTS pg_cron;
 
-    -- business seq musi byc pierwszy
+    -- business seq musi byc pierwszy i hist_trigger_func
     v_statement := pg_read_file(V_BASE_PATH || '/sys/sys_business_id_sequence.sql');
+    execute v_statement;
+
+    v_statement := pg_read_file(V_BASE_PATH || '/hist/functions/hist_trigger_function.sql');
     execute v_statement;
 
     for v_dir in

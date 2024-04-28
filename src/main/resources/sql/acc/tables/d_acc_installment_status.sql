@@ -7,3 +7,7 @@ create table d_acc_installment_status(
     update_user bigint,
     business_id bigint default nextval('sys_business_id_sequence')
 );
+
+create or replace trigger hist
+after insert or update or delete on d_acc_installment_status
+for each row execute function hist_trigger_function();

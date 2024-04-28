@@ -23,7 +23,7 @@ begin
     end if;
 
     -- for account types that requires parent check whether id_parent is not null
-    if acc_check_if_account_requires_parent(p_id_account_type) && p_id_parent_account is null then
+    if acc_check_if_account_requires_parent(p_id_account_type) and p_id_parent_account is null then
         raise exception 'This account type requires parent account!';
     end if;
 

@@ -1,0 +1,1 @@
+insert into usr_user(login, password) values('DEVELOPER', 'asdfasdfas');
