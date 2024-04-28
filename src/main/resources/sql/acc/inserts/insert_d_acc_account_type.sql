@@ -1,0 +1,1 @@
+insert into d_acc_account_type(description, requires_parent, insert_user) values ('Basic account', false, 1);

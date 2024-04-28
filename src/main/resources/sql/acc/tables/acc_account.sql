@@ -16,3 +16,6 @@ create table acc_account(
     business_id bigint default nextval('sys_business_id_sequence')
 );
 
+create or replace trigger hist
+after insert or update or delete on acc_account
+for each row execute function hist_trigger_function();

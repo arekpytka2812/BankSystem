@@ -11,3 +11,7 @@ create table acc_credit_installment(
     business_id bigint default nextval('sys_business_id_sequence')
 
 );
+
+create or replace trigger hist
+after insert or update or delete on acc_credit_installment
+for each row execute function hist_trigger_function();

@@ -4,3 +4,7 @@ create table acc_deposit(
     finish_date date not null,
     starting_amount numeric(15,4)
 );
+
+create or replace trigger hist
+after insert or update or delete on acc_deposit
+for each row execute function hist_trigger_function();

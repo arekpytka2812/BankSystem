@@ -9,3 +9,7 @@ create table acc_balance_queue(
     update_user bigint,
     business_id bigint default nextval('sys_business_id_sequence')
 );
+
+create or replace trigger hist
+after insert or update or delete on acc_balance_queue
+for each row execute function hist_trigger_function();

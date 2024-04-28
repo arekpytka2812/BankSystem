@@ -5,3 +5,7 @@ create table acc_credit(
     no_installment integer,
     full_amount numeric(15,4)
 );
+
+create or replace trigger hist
+after insert or update or delete on acc_credit
+for each row execute function hist_trigger_function();

@@ -7,7 +7,7 @@ as $function$
 begin
 
     perform 1
-    from usr_user_credentials
+    from usr_user
     where login = p_login;
 
     return FOUND;
