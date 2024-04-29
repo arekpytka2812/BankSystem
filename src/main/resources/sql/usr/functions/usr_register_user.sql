@@ -1,4 +1,4 @@
-create or replace function usr_add_user(
+create or replace function usr_register_user(
     p_login text,
     p_password text
 )
@@ -39,13 +39,13 @@ begin
     into v_user_id;
 
     perform acc_add_account(
-    v_user_id,
-    1,
-    null,
-    'Main account',
-    current_date,
-    null,
-    1
+        v_user_id,
+        1,
+        null,
+        'Main account',
+        current_date,
+        null,
+        1
     );
 
     return v_user_id;
