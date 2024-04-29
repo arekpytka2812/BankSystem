@@ -1,4 +1,4 @@
-create or replace function acc_check_if_account_exists(
+create or replace function acc_check_if_account_exists_by_id(
     p_id_account bigint
 )
     returns boolean

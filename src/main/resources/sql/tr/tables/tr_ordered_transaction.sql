@@ -1,5 +1,7 @@
 create table tr_ordered_transaction(
-    id_transaction bigint not null references tr_transaction(id),
+    id bigserial primary key,
+    id_transaction bigint unique not null references tr_transaction(id),
+    id_balance_queue bigint unique references acc_balance_queue(id),
     insert_date timestamp without time zone default localtimestamp(0),
     insert_user bigint,
     update_date timestamp without time zone,

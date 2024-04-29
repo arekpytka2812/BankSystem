@@ -13,11 +13,13 @@ begin
     v_backup_file_path := sys_get_register_value('JOB_BACKUP_FILE_PATH');
     v_file_name := 'db_backup_' || current_date::text || '.dump';
 
-    select job_add_log('job_backup_service', 'Starting backup', false);
+    perform job_add_log('job_backup_service', 'Starting backup', false);
 
-    v_command := 'pg_dump -U job_backup_service -Fc -f' || quote_literal(v_backup_file_path || v_file_name);
+    v_command := 'pg_dump -U postgres -Fc -f ' || quote_literal(v_backup_file_path || '/' || v_file_name);
 
-    select job_add_log('job_backup_service', 'Backup successful', false);
+    execute v_command;
+
+    perform job_add_log('job_backup_service', 'Backup successful', false);
 
     return 0;
 

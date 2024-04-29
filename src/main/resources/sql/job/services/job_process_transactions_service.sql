@@ -22,12 +22,12 @@ begin
     );
 
     for v_row in
-    select id_transaction
+    select id_transaction, id_balance_queue
     from tr_ordered_transaction
 
     loop
 
-        perform tr_process_transaction(v_row.id_transaction);
+        perform tr_process_transaction(v_row.id_transaction, v_row.id_balance_queue, id_user);
 
         v_successful_processes := v_successful_processes + 1;
 

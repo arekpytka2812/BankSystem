@@ -10,7 +10,7 @@ declare
 
     V_BASE_PATH             text := '../../../../home/sql';
 
-    V_MAIN_DIRS_ORDER       text[] := array['sys', 'hist', 'usr', 'acc', 'tr', 'job'];
+    V_MAIN_DIRS_ORDER       text[] := array['hist', 'sys', 'usr', 'acc', 'tr', 'job'];
     V_SUB_DIRS_ORDER        text[] := array['tables', 'functions', 'inserts'];
     V_USR_TABLES_ORDER      text := '''usr_user.sql''';
     V_ACC_TABLES_ORDER      text := '''acc_account.sql'', ''acc_credit.sql'', ''acc_credit_installment.sql''';
@@ -100,9 +100,6 @@ begin
 
     -- business seq musi byc pierwszy i hist_trigger_func
     v_statement := pg_read_file(V_BASE_PATH || '/sys/sys_business_id_sequence.sql');
-    execute v_statement;
-
-    v_statement := pg_read_file(V_BASE_PATH || '/hist/functions/hist_trigger_function.sql');
     execute v_statement;
 
     for v_dir in

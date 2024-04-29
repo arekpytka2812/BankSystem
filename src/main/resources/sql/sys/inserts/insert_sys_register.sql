@@ -1,0 +1,1 @@
+insert into sys_register(key, value, insert_user) values ('JOB_BACKUP_FILE_PATH', '../../../../home/dumps', 1);
