@@ -40,3 +40,5 @@ build/
 .idea/
 
 src/main/resources/properties/*
+
+.env
