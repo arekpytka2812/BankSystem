@@ -7,12 +7,13 @@ create or replace function acc_add_account(
     p_account_close_date date,
     p_currency_id bigint
 )
-returns void
+returns bigint
 language 'plpgsql'
 as $function$
 declare
 
     v_account_name text;
+    v_account_id bigint;
 
 begin
 
@@ -58,7 +59,9 @@ begin
         p_account_close_date,
         p_user_id,
         p_currency_id
-    );
+    ) RETURNING id INTO v_account_id;
+
+    return v_account_id;
 
 end;
 $function$;
