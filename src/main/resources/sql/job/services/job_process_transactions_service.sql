@@ -21,20 +21,30 @@ begin
         false
     );
 
+    update tr_transaction
+    set
+        id_transaction_status = 2,
+        update_user = 2,
+        update_date = localtimestamp(0)
+    where id in (
+        select id_transaction
+        from tr_ordered_transaction
+    );
+
     for v_row in
-    select id_transaction
+    select id_transaction, id_balance_queue
     from tr_ordered_transaction
 
     loop
 
-        perform tr_process_transaction(v_row.id_transaction);
+        perform tr_process_transaction(v_row.id_transaction, v_row.id_balance_queue, 2);
 
         v_successful_processes := v_successful_processes + 1;
 
     end loop;
 
     perform job_add_log(
-        'process_transactions_service',
+        'job_process_transactions_service',
         'Finished processing with ' || v_successful_processes || ', '
             || v_transactions_to_process_count - v_successful_processes || ' transaction was not processed.',
         false

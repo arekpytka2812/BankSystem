@@ -1,6 +1,5 @@
 create or replace function acc_add_deposit_account(
     p_user_id bigint,
-    p_id_account_type bigint,
     p_id_parent_account bigint,
     p_account_name text,
     p_account_open_date date,
@@ -10,7 +9,7 @@ create or replace function acc_add_deposit_account(
     p_finish_date date,
     p_starting_amount numeric(15,4)
 )
-    returns boolean
+    returns bigint
     language 'plpgsql'
 as $function$
 declare
@@ -20,12 +19,20 @@ declare
 
 begin
 
-    v_id := acc_add_account(p_user_id, p_id_account_type,
-                            p_id_parent_account,
-                            p_account_name, p_account_open_date,
-                            p_account_close_date, p_currency_id);
-    INSERT INTO acc_deposit(id, percent, finish_date, starting_amount) VALUES
-                           (v_id, p_percent, p_finish_date, p_starting_amount);
+    v_id := acc_add_account(
+        p_user_id,
+        v_account_type,
+        p_id_parent_account,
+        p_account_name,
+        p_account_open_date,
+        p_account_close_date,
+        p_currency_id
+    );
+
+    INSERT INTO acc_deposit(id, percent, finish_date, starting_amount, insert_user)
+    VALUES(v_id, p_percent, p_finish_date, p_starting_amount, p_user_id);
+
+    return v_id;
 
 end;
 $function$;

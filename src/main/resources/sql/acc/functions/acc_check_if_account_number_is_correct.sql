@@ -11,19 +11,17 @@ declare
 
 begin
 
+    v_pl_country_code := sys_get_register_value('ACCOUNT_NUMBER_PL_COUNTRY_CODE');
+
     if length(p_account_number) <> 26 then
         return false;
     end if;
 
-    v_pl_country_code = v_pl_country_code || LEFT(CAST(p_account_number as text), 2);
+    v_pl_country_code = v_pl_country_code || LEFT(p_account_number::text, 2);
 
-    v_full_acc_number = CAST(RIGHT(CAST(p_account_number as text), -2) || v_pl_country_code as numeric(30,0));
-    if mod(v_full_acc_number, 97) = 1 then
-        return true;
-    else
-        return false;
-    end if;
+    v_full_acc_number = (RIGHT(p_account_number::text, -2) || v_pl_country_code)::numeric(30,0);
 
+    return mod(v_full_acc_number, 97) = 1;
 
 end;
 $function$;

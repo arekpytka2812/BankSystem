@@ -6,7 +6,7 @@ language 'plpgsql'
 as $function$
 declare
 
-    v_requires bigint;
+    v_requires boolean;
 
 begin
 

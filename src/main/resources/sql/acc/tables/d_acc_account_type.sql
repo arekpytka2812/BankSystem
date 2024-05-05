@@ -1,5 +1,5 @@
 create table d_acc_account_type(
-    id          bigserial primary key,
+    id bigserial primary key,
     description text not null ,
     requires_parent boolean not null,
     insert_date timestamp without time zone default localtimestamp(0),
