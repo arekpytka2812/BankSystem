@@ -27,7 +27,7 @@ begin
 
     loop
 
-        perform tr_process_transaction(v_row.id_transaction, v_row.id_balance_queue, id_user);
+        perform tr_process_transaction(v_row.id_transaction, v_row.id_balance_queue, 2);
 
         v_successful_processes := v_successful_processes + 1;
 

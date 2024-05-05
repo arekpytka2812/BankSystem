@@ -12,7 +12,7 @@ begin
 
     -- WIP
 
-    return '';
+    return 'Test account name';
 
 end;
 $function$
