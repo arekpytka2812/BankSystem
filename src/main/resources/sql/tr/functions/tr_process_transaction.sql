@@ -21,11 +21,20 @@ begin
     perform acc_add_money_to_account(v_row.id_account_to, v_row.money_sent, p_id_user);
 
     perform tr_update_transaction(
-
+        p_id_transaction,
+        3,
+        current_date,
+        2
     );
 
     perform tr_delete_transaction_order_if_exists(p_id_transaction);
     perform acc_delete_balance_from_queue(p_id_balance_queue);
+
+    perform usr_add_user_notification(
+        v_row.id_ordering_user,
+        'Successfully processed your transaction: ' || p_id_transaction::text || ' at ' || current_date::text,
+        2
+    );
 
     perform tr_add_transaction_process_log(
         p_id_transaction,
