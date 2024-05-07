@@ -7,12 +7,13 @@ create or replace function acc_add_account(
     p_account_close_date date,
     p_currency_id bigint
 )
-returns void
+returns bigint
 language 'plpgsql'
 as $function$
 declare
 
     v_account_name text;
+    v_account_id bigint;
 
 begin
 
@@ -23,7 +24,7 @@ begin
     end if;
 
     -- for account types that requires parent check whether id_parent is not null
-    if acc_check_if_account_requires_parent(p_id_account_type) and p_id_parent_account is null then
+    if acc_check_if_account_requires_parent(p_id_account_type) and (p_id_parent_account is null) then
         raise exception 'This account type requires parent account!';
     end if;
 
@@ -53,12 +54,14 @@ begin
         p_id_account_type,
         p_id_parent_account,
         coalesce(p_account_name, v_account_name),
-        acc_generate_account_number(p_id_account_type),
+        acc_generate_account_number(),
         coalesce(p_account_open_date, current_date),
         p_account_close_date,
         p_user_id,
         p_currency_id
-    );
+    ) RETURNING id INTO v_account_id;
+
+    return v_account_id;
 
 end;
 $function$;

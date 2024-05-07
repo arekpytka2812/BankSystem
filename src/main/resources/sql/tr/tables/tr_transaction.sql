@@ -8,7 +8,7 @@ create table tr_transaction(
     money_sent numeric(15, 4) not null, --discuss max number
     currency bigint not null references d_acc_currency(id) default 0,
     transaction_order_date date not null,
-    transaction_booking_date date,
+    transaction_process_date date,
     transaction_title text,
     insert_date timestamp without time zone default localtimestamp(0),
     insert_user bigint,

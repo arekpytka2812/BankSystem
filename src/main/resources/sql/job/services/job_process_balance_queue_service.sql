@@ -21,7 +21,7 @@ begin
 
     perform job_add_log(
         'job_process_balance_queue_service',
-        'Starting processing ' || v_accounts_to_process_count || ' accounts'' balances.',
+        'Starting processing ' || v_accounts_to_process_count || ' accounts balances.',
         false
     );
 

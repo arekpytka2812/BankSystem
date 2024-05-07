@@ -1,5 +1,5 @@
 create table d_tr_transaction_status(
-    id bigserial primary key,
+    id bigint primary key,
     description text not null,
     insert_date timestamp without time zone default localtimestamp(0),
     insert_user bigint,

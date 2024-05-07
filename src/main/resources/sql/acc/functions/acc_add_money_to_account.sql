@@ -3,7 +3,7 @@ create or replace function acc_add_money_to_account(
     p_money numeric(15,4),
     p_id_user bigint
 )
-returns boolean
+returns void
 language 'plpgsql'
 as $function$
 begin

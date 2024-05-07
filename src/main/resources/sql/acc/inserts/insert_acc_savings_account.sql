@@ -1,0 +1,1 @@
+select * from acc_add_savings_account(1, null, 'konto', current_date, null, 1, 2.0000, 1000);

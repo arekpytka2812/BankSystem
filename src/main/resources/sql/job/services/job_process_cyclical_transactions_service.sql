@@ -51,7 +51,8 @@ begin
 
             perform usr_add_user_notification(
                 v_row.user_id,
-                'Your scheduled transaction: ' || coalesce(v_row.transaction_title, '') || ' was not processed because of using non-transactional account: ' || v_row.account_name
+                'Your scheduled transaction: ' || coalesce(v_row.transaction_title, '') || ' was not processed because of using non-transactional account: ' || v_row.account_name,
+                2
             );
 
             continue;
@@ -62,7 +63,8 @@ begin
 
             perform usr_add_user_notification(
                 v_row.user_id,
-                'Your scheduled transaction: ' || coalesce(v_row.transaction_title, '') || ' was not processed because of insufficient balance on account: ' || v_row.account_name
+                'Your scheduled transaction: ' || coalesce(v_row.transaction_title, '') || ' was not processed because of insufficient balance on account: ' || v_row.account_name,
+                2
             );
 
             continue;
