@@ -1,4 +1,4 @@
-create or replace function acc_check_creditworhiness(
+create or replace function acc_check_creditworthiness(
     p_years integer,
     p_percent decimal(5, 4),
     p_income decimal(15, 4)
