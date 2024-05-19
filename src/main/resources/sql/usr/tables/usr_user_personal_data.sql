@@ -4,6 +4,7 @@ create table usr_user_personal_data(
     name text,
     surname text,
     date_of_birth date,
+    income decimal(15,4),
     insert_date timestamp without time zone default localtimestamp(0),
     insert_user bigint,
     update_date timestamp without time zone,
