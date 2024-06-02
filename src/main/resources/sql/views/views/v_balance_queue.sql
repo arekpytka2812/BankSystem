@@ -1,4 +1,5 @@
-create or replace view v_balance_queue
+drop view if exists v_balance_queue;
+create view v_balance_queue
     as select bal.id balance_queue_id,
               acc.account_number,
               bal.balance_change

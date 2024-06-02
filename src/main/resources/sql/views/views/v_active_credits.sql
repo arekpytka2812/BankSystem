@@ -1,4 +1,5 @@
-create or replace view v_active_credits
+drop view if exists v_active_credits;
+create view v_active_credits
     as select cred.id credit_account_id,
               cred.percent,
               cred.base_installment,

@@ -10,7 +10,7 @@ declare
 
     V_BASE_PATH             text := '../../../../home/sql';
 
-    V_MAIN_DIRS_ORDER       text[] := array['hist', 'sys', 'usr', 'acc', 'tr', 'job'];
+    V_MAIN_DIRS_ORDER       text[] := array['hist', 'sys', 'usr', 'acc', 'tr', 'job', 'views'];
     V_SUB_DIRS_ORDER        text[] := array['tables', 'types', 'functions', 'inserts', 'views'];
     V_USR_TABLES_ORDER      text := '''usr_user.sql''';
     V_ACC_TABLES_ORDER      text := '''acc_account.sql'', ''acc_credit.sql'', ''acc_credit_installment.sql''';
