@@ -38,7 +38,8 @@ begin
         tr.money_to_sent,
         tr.transaction_title,
         tr.interval_between_transactions,
-        acc.user_id
+        acc.user_id,
+        coalesce(tr.update_date, tr.insert_date) as order_date
     from tr_cyclical_transaction tr
     left join acc_account acc on tr.id_account_from = acc.id
     where next_transaction_date = current_date
@@ -52,7 +53,7 @@ begin
             perform usr_add_user_notification(
                 v_row.user_id,
                 'Your scheduled transaction: ' || coalesce(v_row.transaction_title, '') || ' was not processed because of using non-transactional account: ' || v_row.account_name,
-                2
+                p_user_id
             );
 
             continue;
@@ -64,35 +65,39 @@ begin
             perform usr_add_user_notification(
                 v_row.user_id,
                 'Your scheduled transaction: ' || coalesce(v_row.transaction_title, '') || ' was not processed because of insufficient balance on account: ' || v_row.account_name,
-                2
+                p_user_id
             );
 
             continue;
         end if;
 
-        while v_subtraction_successful = false and v_tries_count < 3 loop
+        perform acc_subtract_money_from_account(v_row.id_account_from, v_row.money_to_sent, p_user_id);
+        perform acc_add_money_to_account(v_row.id_account_to, v_row.money_to_sent, p_user_id);
 
-            v_subtraction_successful := acc_subtract_money_from_account(v_row.id_account_from, v_row.money_to_sent, p_user_id);
-
-            v_tries_count := v_tries_count + 1;
-        end loop;
-
-        if v_subtraction_successful = false then
-            perform acc_add_balance_to_queue(v_row.id_account_from, ('-' || v_row.money_to_sent::text)::numeric(15,4), p_user_id);
-        end if;
-
-        v_tries_count := 0;
-
-        while v_addition_successful = false and v_tries_count < 3 loop
-
-            v_addition_successful := acc_add_money_to_account(v_row.id_account_to, v_row.money_to_sent, p_user_id);
-
-            v_tries_count := v_tries_count + 1;
-        end loop;
-
-        if v_addition_successful = false then
-            perform acc_add_balance_to_queue(v_row.id_account_to, v_row.money_to_sent, p_user_id);
-        end if;
+        insert into tr_transaction(
+            id_ordering_user,
+            id_account_from,
+            id_account_to,
+            id_transaction_type,
+            id_transaction_status,
+            money_sent,
+            transaction_order_date,
+            transaction_process_date,
+            insert_user,
+            transaction_title
+        )
+        values (
+            v_row.user_id,
+            v_row.id_account_from,
+            v_row.id_account_to,
+            4,
+            3,
+            v_row.money_to_sent,
+            v_row.order_date,
+            current_date,
+            v_row.user_id,
+            v_row.transaction_title
+        );
 
         update tr_cyclical_transaction
         set next_transaction_date = tr_get_next_cyclical_transaction_date(v_row.interval_between_transactions),
@@ -103,6 +108,12 @@ begin
         v_transactions_processed := v_transactions_processed + 1;
 
     end loop;
+
+    perform job_add_log(
+        'job_process_cyclical_transactions_service',
+        'Processed ' || v_transactions_to_process_count || ' cyclical transactions',
+        false
+    );
 
 end;
     $function$

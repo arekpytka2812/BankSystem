@@ -1,6 +1,6 @@
 create or replace function tr_add_cyclical_transaction(
     p_id_account_from bigint,
-    p_id_account_to bigint,
+    p_account_number_to text,
     p_money_to_send numeric(15,4),
     p_next_transaction_date date,
     p_transaction_title text,
@@ -11,6 +11,8 @@ create or replace function tr_add_cyclical_transaction(
 returns void
 language 'plpgsql'
 as $function$
+declare
+    v_id_account_to bigint;
 begin
 
     if not acc_check_if_account_to_user_exists(p_id_account_from, p_id_user) then
@@ -21,7 +23,9 @@ begin
         raise exception 'Chosen account is non-transactional!';
     end if;
 
-    if not acc_check_if_account_exists(p_id_account_to) then
+    v_id_account_to := acc_get_account_id_account_by_number(p_account_number_to);
+
+    if v_id_account_to is null then
         raise exception 'Chosen destination account does not exist!';
     end if;
 
@@ -37,7 +41,7 @@ begin
     )
     values(
         p_id_account_from,
-        p_id_account_to,
+        v_id_account_to,
         p_money_to_send,
         sys_get_next_work_day(p_next_transaction_date),
         p_transaction_title,
