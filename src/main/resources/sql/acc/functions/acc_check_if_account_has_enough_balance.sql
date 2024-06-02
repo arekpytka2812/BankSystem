@@ -19,9 +19,6 @@ begin
     where id_account = p_id_account
       and active;
 
-    -- mozna dorobic mechaznim ze konta nie moga miec mnie jniz
-    -- i wtedy tu by sie to sparwdzalo
-
     select balance + v_queue_sum - p_money
     into v_sum
     from acc_account
