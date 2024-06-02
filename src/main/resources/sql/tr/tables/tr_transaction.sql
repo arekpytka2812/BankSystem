@@ -20,3 +20,6 @@ create table tr_transaction(
 create or replace trigger hist
 after insert or update or delete on tr_transaction
 for each row execute function hist_trigger_function();
+
+create index idx_tr_transaction_order_date on tr_transaction using btree(transaction_order_date);
+create index idx_tr_transaction_process_date on tr_transaction using btree(transaction_process_date);

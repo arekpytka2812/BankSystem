@@ -22,6 +22,7 @@ begin
     if v_row.id_transaction_type <> 2 then
         v_transaction_cost = 0;
     end if;
+
     perform acc_subtract_money_from_account(v_row.id_account_from, v_row.money_sent + v_transaction_cost, p_id_user);
     perform acc_add_money_to_account(v_row.id_account_to, v_row.money_sent, p_id_user);
 

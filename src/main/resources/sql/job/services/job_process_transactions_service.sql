@@ -1,4 +1,6 @@
-create or replace function job_process_transactions_service()
+create or replace function job_process_transactions_service(
+    p_id_user bigint
+)
 returns void
 language 'plpgsql'
 as $function$
@@ -24,7 +26,7 @@ begin
     update tr_transaction
     set
         id_transaction_status = 2,
-        update_user = 2,
+        update_user = p_id_user,
         update_date = localtimestamp(0)
     where id in (
         select id_transaction

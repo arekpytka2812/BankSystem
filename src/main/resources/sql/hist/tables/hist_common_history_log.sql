@@ -7,3 +7,6 @@ create table hist_common_history_log(
     insert_date timestamp without time zone default localtimestamp(0),
     insert_user bigint
 );
+
+create index idx_hist_common_history_log_insert_date on hist_common_history_log using btree(insert_date);
+create index idx_hist_common_history_log_table_name on hist_common_history_log using btree(table_name);
