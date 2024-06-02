@@ -13,5 +13,6 @@ begin
         update_date = localtimestamp(0)
     where id = p_id_account;
 
+    return found;
 end;
 $function$;
