@@ -1,0 +1,1 @@
+select * from acc_add_account(1, 1, null, 'zwykle konto', current_date, null, 2);
