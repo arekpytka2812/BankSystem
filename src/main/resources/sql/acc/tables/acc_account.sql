@@ -4,7 +4,7 @@ create table acc_account(
     id_account_type bigint not null references d_acc_account_type(id),
     id_parent_account bigint references acc_account(id),
     account_number text not null unique,
-    account_name text not null, --needed?
+    account_name text not null,
     account_open_date date not null,
     account_close_date date,
     balance numeric(15,4) not null default 0.00,
