@@ -88,10 +88,10 @@ begin
     returning id
     into v_id_transaction;
 
-    if p_id_transaction_type = 1 then  -- for now standard = 1,  immediate type = 2
+    if p_id_transaction_type = 1 then  -- for now standard = 1
         perform tr_add_transaction_order(v_id_transaction, v_id_balance_queue, p_id_user);
 
-    elsif p_id_transaction_type = 2 then
+    elsif p_id_transaction_type in (2, 3) then -- immediate type = 2, credit installment = 3
         perform tr_process_transaction(v_id_transaction, v_id_balance_queue, p_id_user);
     end if;
 
