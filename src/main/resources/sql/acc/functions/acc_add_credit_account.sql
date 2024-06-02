@@ -20,6 +20,14 @@ declare
 
 begin
 
+    perform 1 from acc_account
+                where id_account_type = 4
+                and account_close_date is null
+                and user_id = p_user_id;
+    if found then
+        raise exception 'User cannot have more than one active credit!';
+    end if;
+
     v_id := acc_add_account(
         p_user_id,
         v_account_type,
@@ -32,6 +40,8 @@ begin
 
     INSERT INTO acc_credit(id, percent, base_installment, no_installment, full_amount, insert_user)
     VALUES (v_id, p_percent, p_base_installment, p_no_installment, p_full_amount, p_user_id);
+
+    perform acc_add_credit_installment(v_id, p_base_installment, p_user_id);
 
     return v_id;
 

@@ -15,9 +15,11 @@ declare
     v_current_credit_installment_amount_left numeric(15,4);
     v_credit_base_installment numeric(15,4);
 
-    v_money_to_pay bigint;
+    v_money_to_pay numeric(15,4);
 
-    v_res bigint;
+    v_last_installment_fully_paid boolean;
+
+    v_res bigint := 0;
 
 begin
 
@@ -64,6 +66,7 @@ begin
         );
 
         p_money := p_money - least(v_current_credit_installment_amount_left, p_money);
+        raise notice '%', p_money;
 
         v_res := v_res + 1;
 
@@ -71,26 +74,43 @@ begin
 
     while p_money > 0.0000 loop
 
+        select c.full_amount - a.balance
+        into v_money_to_pay
+        from acc_credit c
+        join acc_account a on c.id = a.id
+        where c.id = v_id_credit_account;
+
+        if v_money_to_pay <= 0 then
+            exit;
+        end if;
+
         v_id_current_credit_installment := acc_add_credit_installment(
             v_id_credit_account,
-            v_credit_base_installment,
+            least(v_credit_base_installment, v_money_to_pay),
             p_id_user
         );
 
-        if p_money - v_credit_base_installment > 0.0000 then
+        if p_money - least(v_credit_base_installment, v_money_to_pay) > 0.0000 then
 
             perform tr_add_transaction(
                 p_id_user,
                 p_id_account_from,
                 v_credit_account_number,
                 3,
-                v_credit_base_installment,
+                least(v_credit_base_installment, v_money_to_pay),
                 current_date,
                 v_id_credit_currency,
                 'Payment for credit ' || v_id_current_credit_installment
             );
 
-            p_money := p_money - v_credit_base_installment;
+            perform acc_update_credit_installment(
+                    v_id_current_credit_installment,
+                    least(v_credit_base_installment, v_money_to_pay),
+                    p_id_user
+                    );
+
+            p_money := p_money - least(v_credit_base_installment, v_money_to_pay);
+            raise notice '%', p_money;
 
             v_res := v_res + 1;
 
@@ -113,17 +133,20 @@ begin
                 p_id_user
             );
 
+            p_money := 0;
+            raise notice '%', p_money;
+
             v_res := v_res + 1;
 
         end if;
 
     end loop;
 
-    select c.full_amount - a.balance
-    into v_money_to_pay
-    from acc_credit c
-    join acc_account a on c.id = a.id
-    where c.id = v_id_credit_account;
+    select id_status = 3
+    into v_last_installment_fully_paid
+    from acc_credit_installment
+    where id_credit = v_id_credit_account
+    order by id desc limit 1;
 
     if v_money_to_pay = 0.0000 then
 
@@ -135,13 +158,13 @@ begin
         perform acc_close_account(v_id_credit_account, p_id_user);
         perform usr_add_user_notification(p_id_user, 'You overpaid your credit! Call our assistant to resolve this situation!', p_id_user);
 
-    else
+    elsif v_money_to_pay > 0.0000 and v_last_installment_fully_paid then
 
         perform acc_add_credit_installment(
-            v_id_credit_account,
-            least(v_credit_base_installment, v_money_to_pay),
-            p_id_user
-        );
+                v_id_credit_account,
+                least(v_credit_base_installment, v_money_to_pay),
+                p_id_user
+                );
 
     end if;
 

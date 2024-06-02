@@ -7,20 +7,21 @@ returns boolean
 language 'plpgsql'
 as $function$
 declare
-    v_id_status bigint;
 
-    v_row bigint;
+    v_id_status bigint;
+    v_amount_paid numeric(15,4);
+    v_amount_to_pay numeric(15,4);
 
 begin
 
-    select *
-    into v_row
+    select amount_paid, amount_to_pay
+    into v_amount_paid, v_amount_to_pay
     from acc_credit_installment
     where id = p_id_credit_installment;
 
-    if v_row.amount_paid + p_money_paid = v_row.amount_to_pay then
+    if v_amount_paid + p_money_paid = v_amount_to_pay then
         v_id_status := 3;
-    elsif v_row.amount_paid + p_money_paid < v_row.amount_to_pay then
+    elsif v_amount_paid + p_money_paid < v_amount_to_pay then
         v_id_status := 2;
     end if;
 
